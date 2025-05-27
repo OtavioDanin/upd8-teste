@@ -10,7 +10,7 @@ readonly class ClienteDTO
     {
         $map = array_map(function ($data) {
             $cidade = ['id' => $data['cidade']['id'], 'nome' => $data['cidade']['nome'], 'estado' => $data['cidade']['estado']];
-            return ['id' => $data['id'], 'nome' => $data['nome'], 'cpf' => $data['cpf'], 'cidade' => $cidade];
+            return ['id' => $data['id'], 'nome' => $data['nome'], 'cpf' => $data['cpf'],'data_nascimento' => $data['data_nascimento'], 'cidade' => $cidade];
         }, $dataCliente);
         return $map;
     }

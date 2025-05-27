@@ -13,3 +13,5 @@ Route::get('/clientes', [App\Http\Controllers\Api\ClienteController::class, 'ind
 Route::post('/clientes', [App\Http\Controllers\Api\ClienteController::class, 'store'])->middleware(ClienteValidation::class);
 Route::put('/clientes/{id}', [App\Http\Controllers\Api\ClienteController::class, 'update']);
 Route::delete('/clientes/{id}', [App\Http\Controllers\Api\ClienteController::class, 'destroy']);
+
+Route::get('/estados', [App\Http\Controllers\Api\CidadeController::class, 'getEstados']);
