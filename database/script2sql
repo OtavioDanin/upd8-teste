@@ -1,0 +1,11 @@
+SELECT
+    r.nome AS nome_representante,
+    r.cargo,
+    c.nome AS cidade,
+    c.estado AS estado
+FROM
+    representantes AS r
+JOIN
+    cidades AS c ON r.cidade_id = c.id
+WHERE
+    c.nome = 'Manaus';

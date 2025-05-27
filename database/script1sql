@@ -1,0 +1,13 @@
+SELECT
+    r.nome AS nome_representante,
+    r.cargo,
+    c_rep.nome AS cidade_representante,
+    c_rep.estado AS estado_representante
+FROM
+    representantes AS r
+JOIN
+    cidades AS c_rep ON r.cidade_id = c_rep.id
+JOIN
+    clientes AS cl ON cl.cidade_id = c_rep.id
+WHERE
+    cl.id = 1;
