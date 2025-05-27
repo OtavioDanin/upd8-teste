@@ -25,9 +25,10 @@ class ClienteController extends Controller
             $clienteOutput = ClienteDTO::ouputData($clientes);
             return response()->json($clienteOutput, 200);
         } catch (ClientException $cliEx) {
+            $this->logger->error($cliEx->getMessage());
             return response()->json(['message' => $cliEx->getMessage(), 'statusCode' => $cliEx->getCode()], $cliEx->getCode());
-        } catch (Throwable) {
-            //TO DO: LOG
+        } catch (Throwable $th) {
+            $this->logger->critical($th->getMessage());
             return response()->json(['message' => 'Ocorreu uma falha inesperada', 'statusCode' => 500], 500);
         }
     }
@@ -39,8 +40,10 @@ class ClienteController extends Controller
             $this->clienteService->createClient($inputDataCliente);
             return response()->json(['message' => 'Cliente cadastrado com sucesso.', 'statusCode' => 201], 201);
         } catch (ClientException $cliEx) {
+            $this->logger->error($cliEx->getMessage());
             return response()->json(['message' => $cliEx->getMessage(), 'statusCode' => $cliEx->getCode()], $cliEx->getCode());
-        } catch (Throwable) {
+        } catch (Throwable $th) {
+            $this->logger->critical($th->getMessage());
             return response()->json(['message' => 'Ocorreu uma falha inesperada', 'statusCode' => 500], 500);
         }
     }
@@ -51,10 +54,13 @@ class ClienteController extends Controller
             $this->clienteService->updateClient($idCliente, $request->all());
             return response()->json(['message' => 'Cliente atualizado com sucesso.', 'statusCode' => 200], 200);
         } catch (ClientException $cliEx) {
+            $this->logger->error($cliEx->getMessage());
             return response()->json(['message' => $cliEx->getMessage(), 'statusCode' => $cliEx->getCode()], $cliEx->getCode());
-        } catch (ModelNotFoundException) {
+        } catch (ModelNotFoundException $moEx) {
+            $this->logger->error($moEx->getMessage());
             return response()->json(['message' => 'Cliente não encontrado para edição', 'statusCode' => 404], 404);
-        } catch (Throwable) {
+        } catch (Throwable $th) {
+            $this->logger->critical($th->getMessage());
             return response()->json(['message' => 'Ocorreu uma falha inesperada', 'statusCode' => 500], 500);
         }
     }
@@ -66,10 +72,12 @@ class ClienteController extends Controller
             return response()->json(['message' => 'Cliente removido com sucesso.', 'statusCode' => 200], 200);
         } catch (ClientException $cliEx) {
             return response()->json(['message' => $cliEx->getMessage(), 'statusCode' => $cliEx->getCode()], $cliEx->getCode());
+            $this->logger->error($cliEx->getMessage());
         } catch (ModelNotFoundException $moEx) {
-            $this->logger->emergency($moEx->getMessage());
+            $this->logger->error($moEx->getMessage());
             return response()->json(['message' => 'Cliente não encontrado para ser deletado', 'statusCode' => 404], 404);
-        } catch (Throwable) {
+        } catch (Throwable $th) {
+            $this->logger->critical($th->getMessage());
             return response()->json(['message' => 'Ocorreu uma falha inesperada', 'statusCode' => 500], 500);
         }
     }
