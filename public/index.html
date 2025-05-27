@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capturar JSON</title>
+</head>
+<body>
+    <h1>Informações do Cliente</h1>
+    <div id="cliente-output">Carregando...</div>
+
+    <script>
+        const apiUrl = 'http://localhost:8001/api/clientes';
+
+// 2. Use a função fetch() para fazer a requisição HTTP GET.
+fetch(apiUrl)
+    // 3. O primeiro .then() recebe o objeto Response da requisição.
+    //    Verificamos se a requisição foi bem-sucedida (status 2xx).
+    .then(response => {
+        // Se a resposta não for OK (ex: 404 Not Found, 500 Internal Server Error),
+        // lançamos um erro para ser capturado pelo .catch()
+        if (!response.ok) {
+            throw new Error(`Erro HTTP! Status: ${response.status}`);
+        }
+        // Retorna a promessa de transformar o corpo da resposta em JSON.
+        // response.json() também é uma promessa.
+        return response.json();
+    })
+    // 4. O segundo .then() recebe os dados JSON já parseados como um objeto JavaScript.
+    .then(data => {
+        // 'data' agora é o objeto JavaScript que você queria "capturar".
+        // Ele tem a mesma estrutura do JSON que você mostrou.
+        console.log("JSON capturado como objeto JavaScript:", data);
+
+        // data.forEach((element) => console.log(element));
+        for (const property in data) {
+            console.log(`${property}: ${data[property]}`);
+        // more statements
+        }
+
+
+        // Agora você pode acessar as propriedades do objeto diretamente:
+        console.log("ID do cliente:", data.id);
+        console.log("Nome do cliente:", data.nome);
+        console.log("CPF do cliente:", data.cpf);
+        console.log("Data de nascimento:", data.data_nascimento);
+
+        // Para acessar propriedades aninhadas (como 'cidade'):
+        if (data.cidade) { // É sempre bom verificar se a propriedade existe
+            console.log("Nome da cidade:", data.cidade.nome);
+            console.log("Estado da cidade:", data.cidade.estado);
+        } else {
+            console.log("Informações da cidade não disponíveis.");
+        }
+
+        // Exemplo de como você poderia usar esses dados para atualizar o DOM (sua página HTML):
+        const outputDiv = document.getElementById('cliente-output');
+        if (outputDiv) {
+            outputDiv.innerHTML = `
+                <h3>Detalhes do Cliente:</h3>
+                <p><strong>ID:</strong> ${data.id}</p>
+                <p><strong>Nome:</strong> ${data.nome}</p>
+                <p><strong>CPF:</strong> ${data.cpf}</p>
+                <p><strong>Cidade:</strong> ${data.cidade ? data.cidade.nome + ' - ' + data.cidade.estado : 'N/A'}</p>
+            `;
+        }
+
+    })
+    // 5. O .catch() lida com quaisquer erros que ocorrerem durante a requisição ou o parsing do JSON.
+    .catch(error => {
+        console.error("Ocorreu um erro ao buscar o cliente:", error);
+        const outputDiv = document.getElementById('cliente-output');
+        if (outputDiv) {
+            outputDiv.innerHTML = `<p style="color: red;">Erro ao carregar dados do cliente: ${error.message}</p>`;
+        }
+    });
+    </script> 
+</body>
+</html>
